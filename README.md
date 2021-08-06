@@ -52,7 +52,7 @@ Passive Detection:
   resolution_tags:
     - Auto-Acknowledged
   minimum_hits: 2
-  dont_resolve: false
+  dont_resolve: true|false  # Set to true if you want to enrich the incident and have an analyst manually review in the Centra UI
   type: threat_enrich
 ```
 
@@ -60,4 +60,19 @@ Passive Detection:
 
 The `threat_engine` rule will look towards pay-to-win services like VirusTotal, GreyNoise, etc. to determine if a threat is malicious or not.
 
-NOT IMPLEMENTED YET
+!!! note "Work in Progress"
+    NOT IMPLEMENTED YET
+
+#### Example Configuration
+
+```yaml
+engines:
+  virustotal:
+    enabled: false
+    api_key: ""
+  greynoise:
+    enabled: false
+    api_key: ""
+```
+
+
