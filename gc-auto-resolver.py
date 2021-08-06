@@ -29,152 +29,6 @@ def load_feeds(feed_configs):
     feeds = [Feed(feed_configs[f]) for f in feed_configs if feed_configs[f]['disabled'] == False]
     return feeds
 
-
-def gc_authenticate(management_url, username, password):
-    """
-    Authenticates to the Guardicore API
-    """
-
-    s = requests.Session()
-
-    auth_body = {
-        "username": username,
-        "password": password
-    }
-
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    access_token = None
-
-    response = s.post(f"https://{management_url}/api/v3.0/authenticate", data=json.dumps(auth_body), headers=headers)
-    if response.status_code == 200:
-        access_token = response.json()["access_token"]
-
-    return access_token
-
-def gc_get_incidents(management_url, access_token, tags=[]):
-    """
-    Fetches a list of un-acknowledged incidents from the last 24 hours
-    """
-    tag_list = ",".join(tags)
-    from_time = int((datetime.now() - timedelta(hours=24)).timestamp()) * 1000
-    to_time = int(datetime.now().timestamp()) * 1000
-
-    with requests.Session() as s:
-        s.headers.update({
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}"
-        })
-        url = f"https://{management_url}/api/v3.0/incidents?tag={tag_list}&tag__not=Acknowledged&from_time={from_time}&to_time={to_time}&limit=500"
-        response = s.get(url)
-        if response.status_code == 200:
-            data = response.json()
-    return data['objects']
-
-
-def gc_tag_incident(management_url, access_token, incident_id, tags=[]):
-    """
-    Tags an incident
-    """
-
-    """ From Devtools response - Undocumented API endpoint
-    POST
-    https://cus-2782.cloud.guardicore.com/api/v3.0/incidents/tag
-    {"action":"add","tag_name":"Test","negate_args":null,"ids":["91d5531d-5915-477a-ae95-1af6981df625"]}
-    """
-
-    with requests.Session() as s:
-        s.headers.update({
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}"
-        })
-
-        # Assign all the tags
-        for tag in tags:
-            data = {
-                "action": "add",
-                "tag_name": tag,
-                "negate_args": None,
-                "ids": [incident_id]
-            }
-            s.post(f"https://{management_url}/api/v3.0/incidents/tag", data=json.dumps(data))
-
-    return
-
-
-def gc_acknowledge_incident(management_url, access_token, incident_id):
-    """
-    Acknowledge an incident in Guardicore
-    """
-
-    """ From Devtools response - Undocumented API endpoint
-    POST
-    https://cus-2782.cloud.guardicore.com/api/v3.0/incidents/acknowledge
-    {"ids":["e9fde08e-c52a-469e-971d-ab15f8ec672f"],"negate_args":null}
-    """
-
-    with requests.Session() as s:
-
-        s.headers.update({
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}"
-        })
-
-        data = {
-            "ids": [incident_id],
-            "negate_args": None
-        }
-        s.post(f"https://{management_url}/api/v3.0/incidents/acknowledge", data=json.dumps(data))        
-    
-    return
-
-
-def gc_block_ip(management_url, access_token, ip, rule_set, direction, *args, **kwargs):
-    """
-    Blocks an IP address in an override block
-    """
-
-    """
-    POST
-    https://cus-2782.cloud.guardicore.com/api/v3.0/widgets/malicious-reputation-block
-    {"direction":"DESTINATION","reputation_type":"top_ips","ruleset_name":"Reputation Blocked Destination IP","value":"61.177.172.158"}
-    """
-
-    # Supported rule directions, using both will update both sides
-    if direction not in ["DESTINATION","SOURCE","BOTH"]:
-        return False
-
-    with requests.Session() as s:
-
-        s.headers.update({
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {access_token}"
-        })        
-
-        if direction in ["DESTINATION", "BOTH"]:
-            data = {
-                "direction": "DESTINATION",
-                "reputation_type": "top_ips",
-                "ruleset_name": rule_set + " | Outbound",
-                "value": ip
-            }
-            s.post(f"https://{management_url}/api/v3.0/widgets/malicious-reputation-block", data=json.dumps(data))
-            
-        if direction in ["SOURCE", "BOTH"]:
-            data = {
-                "direction": "SOURCE",
-                "reputation_type": "top_ips",
-                "ruleset_name": rule_set + " | Inbound",
-                "value": ip
-            }
-            s.post(f"https://{management_url}/api/v3.0/widgets/malicious-reputation-block", data=json.dumps(data))
-
-    return True
-
-
-
 def vt_lookup(ip):
     """
     Checks the VirusTotal API for threat intel on a given IP address
@@ -227,13 +81,12 @@ if __name__ == "__main__":
         logging.info("Enabling caching for Requests with a {} second(s) expiration period".format(config['caching']['expiration']))
         requests_cache.install_cache('gc-auto-resolve', backend=config['caching']['backend'], expire_after=config['caching']['expiration'])
 
-    logging.info("Authenticating to Guardicore")
-    access_token = gc_authenticate(**config['guardicore'])
-
     feeds = load_feeds(config['feeds'])
 
+    # Create a new CentraAPI object and authenticate to the API
+    logging.info("Authenticating to Guardicore")
     centra = CentraAPI(management_url=config['guardicore']['management_url'])
-    centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['username'])
+    centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['password'])
     
     while True:
         for rule in config['rules']:
@@ -242,25 +95,13 @@ if __name__ == "__main__":
 
             incidents = centra.get_incidents(tags=rule_config['tags'])
 
-            #incidents = gc_get_incidents(config['guardicore']['management_url'], access_token, tags=rule_config['tags'])
             if len(incidents) > 0:
                 logging.info("Processing {} incidents".format(len(incidents)))
 
                 for incident in incidents:
 
-                    source = incident["source_asset"]
-                    destination = incident["destination_asset"]
-                    if destination['is_inner'] == False:
-                        ip = destination['ip']
-
-                    if source['is_inner'] == False:
-                        ip = source['ip']
-
-                    gc_info = {
-                        "management_url": config['guardicore']['management_url'],
-                        "access_token": access_token,
-                        "incident_id": incident['id']
-                    }
+                    ip = centra.get_inner(incident["source_asset"], incident["destination_asset"])
+                    incident_id = incident['id']
 
                     threshold_exceeded = False
 
@@ -281,20 +122,20 @@ if __name__ == "__main__":
                         # If tag do the tagging
                         if 'tag' in rule_config['actions']:
                             tags = feed_names+rule_config['resolution_tags']
-                            logging.info(f"Tagging {gc_info['incident_id']} with {','.join(tags)}")
-                            gc_tag_incident(**gc_info, tags=tags)
+                            logging.info(f"Tagging {incident_id} with {','.join(tags)}")
+                            centra.tag_incident(incident_id, tags)
 
                         # If resolve action acknolwedge the incident
                         if 'resolve' in rule_config['actions']:
-                            logging.info(f"Setting incident {gc_info['incident_id']} as acknowledged.")
-                            gc_acknowledge_incident(**gc_info)
+                            logging.info(f"Setting incident {incident_id} as acknowledged.")
+                            centra.acknowledge_incident(ids=[incident_id])
 
                         # If a block action is defined, extract the block action config and do the blocking
                         block_config = [k for k in rule_config['actions'] if isinstance(k, dict) and 'block' in k]
                         if block_config:
                             block_config = block_config[0]['block']
                             logging.info(f"Blocking {ip} in {block_config['rule_set']} for direction {block_config['direction']}")
-                            gc_block_ip(**gc_info, ip=ip, **block_config)
+                            centra.block_ip(ip=ip, **block_config)
 
         sleep_interval = config['global']['interval']
         logging.info(f"Sleeping for {sleep_interval} seconds")

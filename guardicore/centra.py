@@ -63,7 +63,7 @@ class CentraAPI(object):
             self.session.post(f"https://{self.management_url}/api/v3.0/widgets/malicious-reputation-block", data=json.dumps(data))
 
 
-    def get_incidents(self, tags=[], tag__not=["Acknowledged"], limit=250):
+    def get_incidents(self, tags=[], tag__not=["Acknowledged"], limit=250, from_hours=24):
         """
         Fetches a list of incidents from Centra UI based on
         a set of criteria
@@ -71,7 +71,7 @@ class CentraAPI(object):
 
         tag_list = ",".join(tags)
         tag__not = ",".join(tag__not)
-        from_time = int((datetime.now() - timedelta(hours=24)).timestamp()) * 1000
+        from_time = int((datetime.now() - timedelta(hours=from_hours)).timestamp()) * 1000
         to_time = int(datetime.now().timestamp()) * 1000
 
         url = f"https://{self.management_url}/api/v3.0/incidents?tag={tag_list}&tag__not={tag__not}&from_time={from_time}&to_time={to_time}&limit=500"
@@ -114,4 +114,14 @@ class CentraAPI(object):
             "ids": ids,
             "negate_args": None
         }
-        self.session.post(f"https://{self.management_url}/api/v3.0/incidents/acknowledge", data=json.dumps(data))       
+        self.session.post(f"https://{self.management_url}/api/v3.0/incidents/acknowledge", data=json.dumps(data))
+
+    def get_inner(self, destination, source):
+        """
+        Returns the IP that is part of an incident that is actually
+        the bad indicator of the traffic
+        """
+        if destination['is_inner'] == False:
+            return destination['ip']
+        else:
+            return source['ip']

@@ -5,6 +5,7 @@ COPY gc-auto-resolver.py /
 COPY Pipfile /
 COPY Pipfile.lock /
 COPY threat_feeds /threat_feeds
+COPY guardicore /guardicore
 
 WORKDIR /
 
