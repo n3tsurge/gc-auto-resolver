@@ -19,6 +19,7 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 - [ ] Enrich and resolve incidents using platforms like VirusTotal, Greynoise, etc.
 - [ ] Add malicious IPs from incidents to a label in Guardicore for inclusion in a `override block` policy
 - [ ] Add malicious IPs to custom threat list file for use by Palo Alto EDL (external dynamic list)
+- [ ] SentinelOne Deep Visibility initiating process threat enrichment
 
 ## Caching
 
@@ -47,6 +48,10 @@ feeds:
 ## Defining Rules
 
 There are several types of resolution rules you can create
+
+- **threat_enrich** - Looks to DNSBL and HTTP based lists for threat intelligence
+- **threat_engine** - Looks towards tools like VirusTotal or Greynoise for threat intelligence on an IP
+- **sentinelone** - Runs a SentinelOne Deep Visibility query for the process initiating the traffic and checks threat information about the process
 
 ### Threat Enrich
 
