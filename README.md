@@ -60,8 +60,7 @@ Passive Detection:
 
 The `threat_engine` rule will look towards pay-to-win services like VirusTotal, GreyNoise, etc. to determine if a threat is malicious or not.
 
-!!! note "Work in Progress"
-    NOT IMPLEMENTED YET
+> :warning: **Work in Progress** This feature is not yet implemented
 
 #### Example Configuration
 
