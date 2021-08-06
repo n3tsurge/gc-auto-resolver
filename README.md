@@ -62,7 +62,8 @@ Passive Detection:
     - Auto-Acknowledged
   minimum_hits: 2
   dont_resolve: true|false  # Set to true if you want to enrich the incident and have an analyst manually review in the Centra UI
-  type: threat_enrich
+  type: 
+    - threat_enrich
 ```
 
 ### Engine

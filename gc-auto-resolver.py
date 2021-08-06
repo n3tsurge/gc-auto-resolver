@@ -158,7 +158,6 @@ def enrich_incident(incident, minimum_hits, feeds=[]):
     # If the rule stipulates a certain number of hits for threat feeds and we meet or exceed 
     # that threshold, automatically resolve the alarm
     if found_in >= minimum_hits:
-        logging.info(f"Feed threshold crossed for {ip} automatically resolving incident.")
         return True, feed_names
     return False, feed_names
 
@@ -197,10 +196,16 @@ if __name__ == "__main__":
             
                 for incident in incidents:
 
-                    if rule_config['type'] == "threat_enrich":
+                    threshold_exceeded = False
+
+                    if "threat_enrich" in rule_config['type']:
                         threshold_exceeded, feed_names = enrich_incident(incident, rule_config['minimum_hits'], feeds=feeds)
-                        if threshold_exceeded:
-                            gc_tag_incident(config['guardicore']['management_url'], access_token, incident['id'], tags=feed_names+rule_config['resolution_tags'])
+
+                    if "threat_engine" in rule_config['type']:
+                        logging.warning("Threat Engines not yet implemented.")
+
+                    if threshold_exceeded:
+                        gc_tag_incident(config['guardicore']['management_url'], access_token, incident['id'], tags=feed_names+rule_config['resolution_tags'])
 
         sleep_interval = config['global']['interval']
         logging.info(f"Sleeping for {sleep_interval} seconds")

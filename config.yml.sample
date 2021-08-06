@@ -13,7 +13,8 @@ rules:
     resolution_tags:
       - Auto-Acknowledged
     minimum_hits: 2
-    type: threat_enrich
+    type: 
+      - threat_enrich
 
 caching:
   enabled: true
