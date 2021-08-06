@@ -65,11 +65,11 @@ The rule will look towards external threat lists and DNS lists to determine if t
 ```yaml
 Passive Detection:
   tags:
-    - Blacklisted IP Address
+    - Blacklisted IP Address # The tags that an incident should have when polling Centra incidents
   resolution_tags:
-    - Auto-Acknowledged
+    - Auto-Acknowledged # The tags to assign to the incident at resolution time
   minimum_hits: 2
-  dont_resolve: true|false  # Set to true if you want to enrich the incident and have an analyst manually review in the Centra UI
+  dont_resolve: false # Set to true if you only want to tag an incident
   intel_source: 
     - lists
 ```
