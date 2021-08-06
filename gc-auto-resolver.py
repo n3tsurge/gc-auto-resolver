@@ -1,10 +1,7 @@
-import json
 import yaml
-import requests
+import time
 import logging
 import requests_cache
-import time
-from datetime import datetime, timedelta
 from argparse import ArgumentParser
 from pyaml_env import parse_config
 from threat_feeds.feed import Feed
