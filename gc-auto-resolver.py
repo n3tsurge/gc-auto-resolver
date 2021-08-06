@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from argparse import ArgumentParser
 from pyaml_env import parse_config
 from threat_feeds.feed import Feed
+from guardicore.centra import CentraAPI
 
 def load_config(path="config.yml"):
     """
@@ -230,13 +231,18 @@ if __name__ == "__main__":
     access_token = gc_authenticate(**config['guardicore'])
 
     feeds = load_feeds(config['feeds'])
+
+    centra = CentraAPI(management_url=config['guardicore']['management_url'])
+    centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['username'])
     
     while True:
         for rule in config['rules']:
             rule_config = config['rules'][rule]
             logging.info(f"Running rule \"{rule}\"")
 
-            incidents = gc_get_incidents(config['guardicore']['management_url'], access_token, tags=rule_config['tags'])
+            incidents = centra.get_incidents(tags=rule_config['tags'])
+
+            #incidents = gc_get_incidents(config['guardicore']['management_url'], access_token, tags=rule_config['tags'])
             if len(incidents) > 0:
                 logging.info("Processing {} incidents".format(len(incidents)))
 

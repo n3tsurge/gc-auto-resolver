@@ -13,13 +13,13 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 5. Define your threat feeds
 6. Run the tool
 
-### Feature Checklist
+## Feature Checklist
 
 - [ ] Dockerized version
 - [x] Enrich and resolve incidents using external threat lists
+- [x] Add IPs to a `override block` rule in Guardicore
 - [ ] Check to see if an IP has any records in a DNSBL
 - [ ] Enrich and resolve incidents using platforms like VirusTotal, Greynoise, etc.
-- [ ] Add malicious IPs from incidents to a label in Guardicore for inclusion in a `override block` policy
 - [ ] Add malicious IPs to custom threat list file for use by Palo Alto EDL (external dynamic list)
 - [ ] SentinelOne Deep Visibility initiating process threat enrichment
 
@@ -110,4 +110,6 @@ engines:
     management_url: ""
 ```
 
+## Warranty & Support
 
+I am not responsible if you break your system with this script.  Usage is up to your own risk appetite.
