@@ -49,13 +49,16 @@ feeds:
 
 There are several types of resolution rules you can create
 
-- **threat_enrich** - Looks to DNSBL and HTTP based lists for threat intelligence
-- **threat_engine** - Looks towards tools like VirusTotal or Greynoise for threat intelligence on an IP
+### Intel Sources
+
+- **lists** - Looks to DNSBL and HTTP based lists for threat intelligence
+- **virustotal** - Looks to  VirusTotal for threat intelligence on an IP
+- **greynoise** - Looks to Greynoise for threat intelligence on an IP
 - **sentinelone** - Runs a SentinelOne Deep Visibility query for the process initiating the traffic and checks threat information about the process
 
-### Threat Enrich
+#### Sample Rule
 
-The `threat_enrich` rule will look towards external threat lists and DNS lists to determine if the threat is malicious or not. When the number of threat lists meets or exceeds `minimum_hits` the Incident will be tagged with the lists the IP addres appears on and the `Auto-Acknowledged` tag.
+The rule will look towards external threat lists and DNS lists to determine if the threat is malicious or not. When the number of threat lists meets or exceeds `minimum_hits` the Incident will be tagged with the lists the IP addres appears on and the `Auto-Acknowledged` tag.
 
 #### Example
 
@@ -67,13 +70,13 @@ Passive Detection:
     - Auto-Acknowledged
   minimum_hits: 2
   dont_resolve: true|false  # Set to true if you want to enrich the incident and have an analyst manually review in the Centra UI
-  type: 
-    - threat_enrich
+  intel_source: 
+    - lists
 ```
 
-### Engine
+### Engines
 
-The `threat_engine` rule will look towards pay-to-win services like VirusTotal, GreyNoise, etc. to determine if a threat is malicious or not.
+When using `virustotal`, `sentinelone`, or `greynoise` you can configure them in the `engines` section of `config.yml`
 
 > :warning: **Work in Progress** This feature is not yet implemented
 
@@ -87,6 +90,10 @@ engines:
   greynoise:
     enabled: false
     api_key: ""
+  sentinelone:
+    enabled: false
+    api_key: ""
+    management_url: ""
 ```
 
 

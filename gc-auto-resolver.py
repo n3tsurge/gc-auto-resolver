@@ -198,11 +198,17 @@ if __name__ == "__main__":
 
                     threshold_exceeded = False
 
-                    if "threat_enrich" in rule_config['type']:
+                    if "lists" in rule_config['intel_source']:
                         threshold_exceeded, feed_names = enrich_incident(incident, rule_config['minimum_hits'], feeds=feeds)
 
-                    if "threat_engine" in rule_config['type']:
-                        logging.warning("Threat Engines not yet implemented.")
+                    if "virustotal" in rule_config['intel_source']:
+                        logging.warning("VirusTotal not yet implemented.")
+
+                    if "greynoise" in rule_config['intel_source']:
+                        logging.warning("Greynoise not yet implemented.")
+
+                    if "sentinelone" in rule_config['intel_source']:
+                        logging.warning("SentinelOne not yet implemented.")
 
                     if threshold_exceeded:
                         gc_tag_incident(config['guardicore']['management_url'], access_token, incident['id'], tags=feed_names+rule_config['resolution_tags'])

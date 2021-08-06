@@ -13,8 +13,8 @@ rules:
     resolution_tags:
       - Auto-Acknowledged
     minimum_hits: 2
-    type: 
-      - threat_enrich
+    intel_source: 
+      - lists
 
 caching:
   enabled: true
@@ -67,3 +67,7 @@ engines:
   greynoise:
     enabled: false
     api_key: ""
+  sentinelone:
+    enabled: false
+    api_key: ""
+    management_url: ""
