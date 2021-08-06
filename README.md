@@ -58,6 +58,12 @@ There are several types of resolution rules you can create
 - **greynoise** - Looks to Greynoise for threat intelligence on an IP
 - **sentinelone** - Runs a SentinelOne Deep Visibility query for the process initiating the traffic and checks threat information about the process
 
+### Actions
+
+- **block** - Adds a block rule in Guardicore for the IP in question (can be `SOURCE` or `DESTINATION` or `BOTH`)
+- **resolve** - Adds the `Acknowledged` tag to the incident in Guardicore
+- **tag** - Adds tags to the Incident in Guardicore
+
 #### Sample Rule
 
 The rule will look towards external threat lists and DNS lists to determine if the threat is malicious or not. When the number of threat lists meets or exceeds `minimum_hits` the Incident will be tagged with the lists the IP addres appears on and the `Auto-Acknowledged` tag.
@@ -74,6 +80,12 @@ Passive Detection:
   dont_resolve: false # Set to true if you only want to tag an incident
   intel_source: 
     - lists
+  actions:
+    - block
+      rule_set: "Automatic Blacklisted IP Blocking"
+      direction: BOTH
+    - resolve
+    - tag
 ```
 
 ### Engines
