@@ -1,7 +1,10 @@
+global:
+  interval: 60
+
 guardicore:
-    management_url: "cus-NNNN.cloud.guardicore.com"
-    username: ""
-    password: ""
+  management_url: "cus-NNNN.cloud.guardicore.com"
+  username: ""
+  password: ""
 
 rules:
   Passive Detection:

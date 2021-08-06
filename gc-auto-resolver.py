@@ -3,6 +3,7 @@ import yaml
 import requests
 import logging
 import requests_cache
+import time
 from datetime import datetime, timedelta
 from argparse import ArgumentParser
 from pyaml_env import parse_config
@@ -185,17 +186,22 @@ if __name__ == "__main__":
 
     feeds = load_feeds(config['feeds'])
     
-    for rule in config['rules']:
-        rule_config = config['rules'][rule]
-        logging.info(f"Running rule \"{rule}\"")
+    while True:
+        for rule in config['rules']:
+            rule_config = config['rules'][rule]
+            logging.info(f"Running rule \"{rule}\"")
 
-        incidents = gc_get_incidents(config['guardicore']['management_url'], access_token, tags=rule_config['tags'])
-        if len(incidents) > 0:
-            logging.info("Processing {} incidents".format(len(incidents)))
-        
-            for incident in incidents:
+            incidents = gc_get_incidents(config['guardicore']['management_url'], access_token, tags=rule_config['tags'])
+            if len(incidents) > 0:
+                logging.info("Processing {} incidents".format(len(incidents)))
+            
+                for incident in incidents:
 
-                if rule_config['type'] == "threat_enrich":
-                    threshold_exceeded, feed_names = enrich_incident(incident, rule_config['minimum_hits'], feeds=feeds)
-                    if threshold_exceeded:
-                        gc_tag_incident(config['guardicore']['management_url'], access_token, incident['id'], tags=feed_names+rule_config['resolution_tags'])
+                    if rule_config['type'] == "threat_enrich":
+                        threshold_exceeded, feed_names = enrich_incident(incident, rule_config['minimum_hits'], feeds=feeds)
+                        if threshold_exceeded:
+                            gc_tag_incident(config['guardicore']['management_url'], access_token, incident['id'], tags=feed_names+rule_config['resolution_tags'])
+
+        sleep_interval = config['global']['interval']
+        logging.info(f"Sleeping for {sleep_interval} seconds")
+        time.sleep(sleep_interval)
