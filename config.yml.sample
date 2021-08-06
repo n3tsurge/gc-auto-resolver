@@ -13,9 +13,14 @@ rules:
     resolution_tags:
       - Auto-Acknowledged # The tags to assign to the incident at resolution time
     minimum_hits: 2
-    dont_resolve: false # Set to true if you only want to tag an incident
     intel_source: 
       - lists|virustotal|sentinelone|greynoise
+    actions:
+      - block
+        rule_set: "Automatic Blacklisted IP Blocking"
+        direction: BOTH
+      - resolve
+      - tag
 
 caching:
   enabled: true
