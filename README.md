@@ -2,6 +2,8 @@
 
 This tool automatically resolves Guardicore Incidents in the Centra UI based on a set of rules defined in `config.yml`
 
+![Example](example.png)
+
 ## Getting started
 
 1. Rename `config.yml.sample` to `config.yml`
