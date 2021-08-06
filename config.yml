@@ -1,0 +1,65 @@
+guardicore:
+    management_url: "cus-NNNN.cloud.guardicore.com"
+    username: ""
+    password: ""
+
+rules:
+  Passive Detection:
+    tags:
+      - Blacklisted IP Address
+    resolution_tags:
+      - Auto-Acknowledged
+    minimum_hits: 2
+    type: threat_enrich
+
+caching:
+  enabled: true
+  backend: sqlite
+  expiration: 43200 # 12 hours
+  
+feeds:
+  alienvault:
+    name: Alienvault
+    url: http://reputation.alienvault.com/reputation.data
+    format: "ip"
+    geodata: true
+    disabled: false
+    type: "list"
+  emergingthreats:
+    name: Emerging Threats
+    url: http://rules.emergingthreats.net/blockrules/compromised-ips.txt
+    format: ip
+    disabled: false
+    type: list
+  spamhouse-drop:
+    name: SpamHaus Drop
+    url: https://www.spamhaus.org/drop/drop.txt
+    format: cidr
+    disabled: false
+    type: list
+  spamhouse-edrop:
+    name: SpamHaus eDrop
+    url: https://www.spamhaus.org/drop/edrop.txt
+    format: cidr
+    disabled: false
+    type: list
+  dshield:
+    name: Dshield
+    url: http://www.dshield.org/ipsascii.html?limit=10000
+    format: ip
+    disabled: false
+    type: list
+  blocklistde:
+    name: BlocklistDe
+    url: http://www.blocklist.de/lists/bruteforcelogin.txt
+    format: ip
+    disabled: false
+    type: list
+
+engines:
+  virustotal:
+    enabled: false
+    api_key: ""
+  greynoise:
+    enabled: false
+    api_key: ""
