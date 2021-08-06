@@ -11,6 +11,15 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 5. Define your threat feeds
 6. Run the tool
 
+### Feature Checklist
+
+- [ ] Dockerized version
+- [x] Enrich and resolve incidents using external threat lists
+- [ ] Check to see if an IP has any records in a DNSBL
+- [ ] Enrich and resolve incidents using platforms like VirusTotal, Greynoise, etc.
+- [ ] Add malicious IPs from incidents to a label in Guardicore for inclusion in a `override block` policy
+- [ ] Add malicious IPs to custom threat list file for use by Palo Alto EDL (external dynamic list)
+
 ## Caching
 
 By default the tool will cache HTTP requests for HTTP based lists to limit the number of times a list needs to be fetched.  This is controlled in `config.yml` in this section:
