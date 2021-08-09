@@ -68,6 +68,7 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument('--config', help="The path to the configuration file", default="config.yml", required=False)
+    parser.add_argument('--lookback', help="How many hours to look back in Guardicore for incidents", default=24, required=False, type=int)
 
     args = parser.parse_args()
 
@@ -84,13 +85,16 @@ if __name__ == "__main__":
     logging.info("Authenticating to Guardicore")
     centra = CentraAPI(management_url=config['guardicore']['management_url'])
     centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['password'])
+
+    # Set the lookback setting for Guardicore unless it's been overridden by a command line parameter
+    look_back = config['guardicore']['lookback'] if not args.lookback != 24 else args.lookback
     
     while True:
         for rule in config['rules']:
             rule_config = config['rules'][rule]
             logging.info(f"Running rule \"{rule}\"")
 
-            incidents = centra.get_incidents(tags=rule_config['tags'])
+            incidents = centra.get_incidents(tags=rule_config['tags'], from_hours=look_back)
 
             if len(incidents) > 0:
                 logging.info("Processing {} incidents".format(len(incidents)))
@@ -102,19 +106,20 @@ if __name__ == "__main__":
 
                     threshold_exceeded = False
 
-                    if "lists" in rule_config['intel_source']:
-                        threshold_exceeded, feed_names = enrich_ip(ip, rule_config['minimum_hits'], feeds=feeds)
+                    if 'intel_source' in rule_config:
+                        if "lists" in rule_config['intel_source']:
+                            threshold_exceeded, feed_names = enrich_ip(ip, rule_config['minimum_hits'], feeds=feeds)
 
-                    if "virustotal" in rule_config['intel_source']:
-                        logging.warning("VirusTotal not yet implemented.")
+                        if "virustotal" in rule_config['intel_source']:
+                            logging.warning("VirusTotal not yet implemented.")
 
-                    if "greynoise" in rule_config['intel_source']:
-                        logging.warning("Greynoise not yet implemented.")
+                        if "greynoise" in rule_config['intel_source']:
+                            logging.warning("Greynoise not yet implemented.")
 
-                    if "sentinelone" in rule_config['intel_source']:
-                        logging.warning("SentinelOne not yet implemented.")
+                        if "sentinelone" in rule_config['intel_source']:
+                            logging.warning("SentinelOne not yet implemented.")
 
-                    if threshold_exceeded:
+                    if threshold_exceeded or rule_config['minimum_hits'] == 0:
 
                         # If tag do the tagging
                         if 'tag' in rule_config['actions']:

@@ -2,6 +2,7 @@ import dns.resolver
 import requests
 import re
 import requests_cache
+import logging
 from requests import exceptions as rexp
 from netaddr import IPSet, IPNetwork, IPAddress
 
@@ -48,6 +49,8 @@ class Feed(object):
         # Try to pull down the data from the feed URL
         try:
             result = session.get(self.url)
+            if not result.from_cache:
+                logging.warning("Not from cache.")
             if result.status_code == 200:
 
                 # If the threat feed is in CIDR notation, pull all the listed subnets

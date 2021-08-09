@@ -21,7 +21,11 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 - [ ] Check to see if an IP has any records in a DNSBL
 - [ ] Enrich and resolve incidents using platforms like VirusTotal, Greynoise, etc.
 - [ ] Add malicious IPs to custom threat list file for use by Palo Alto EDL (external dynamic list)
+- [ ] Add support for OpenCTI
+- [ ] Add support for MISP
+- [ ] Add support for Memcached
 - [ ] SentinelOne Deep Visibility initiating process threat enrichment
+- [ ] Country blocking
 
 ## Caching
 
@@ -57,12 +61,17 @@ There are several types of resolution rules you can create
 - **virustotal** - Looks to  VirusTotal for threat intelligence on an IP
 - **greynoise** - Looks to Greynoise for threat intelligence on an IP
 - **sentinelone** - Runs a SentinelOne Deep Visibility query for the process initiating the traffic and checks threat information about the process
+- **opencti** - Looks to an OpenCTI for threat intelligence
+- **misp** - Looks to the MISP API for threat intelligence
+- **memcached** - Looks to a specified memcached namespace for threat intelligence
 
 ### Actions
 
 - **block** - Adds a block rule in Guardicore for the IP in question (can be `SOURCE` or `DESTINATION` or `BOTH`)
 - **resolve** - Adds the `Acknowledged` tag to the incident in Guardicore
 - **tag** - Adds tags to the Incident in Guardicore
+- **thehive** - Creates an incident in the TheHive
+- **paloedl** - Creates an entry for Palo Alto External Dynamic Lists, lists can be called by having the Palo Alto point top `http://[container-ip]:[port]/edl?list_name=[specify_list]`
 
 #### Sample Rule
 
@@ -90,7 +99,7 @@ Passive Detection:
 
 ### Engines
 
-When using `virustotal`, `sentinelone`, or `greynoise` you can configure them in the `engines` section of `config.yml`
+When using `virustotal`, `sentinelone`, `greynoise`, `opencti`, or `misp` you can configure them in the `engines` section of `config.yml`
 
 > :warning: **Work in Progress** This feature is not yet implemented
 

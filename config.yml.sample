@@ -5,6 +5,7 @@ guardicore:
   management_url: "cus-NNNN.cloud.guardicore.com"
   username: ""
   password: ""
+  lookback: 24
 
 rules:
   Passive Detection:
@@ -16,11 +17,15 @@ rules:
     intel_source: 
       - lists|virustotal|sentinelone|greynoise
     actions:
-      - block
-        rule_set: "Automatic Blacklisted IP Blocking"
-        direction: BOTH
+      #- block
+      #  rule_set: "Automatic Blacklisted IP Blocking"
+      #  direction: BOTH
       - resolve
       - tag
+      - paloedl
+        list_name: "custom"
+        expiration: 72 # How many hours you want to keep the IP on the EDL
+        comments: true # Add comments to the EDL to show why the IP was added
 
 caching:
   enabled: true
@@ -77,3 +82,20 @@ engines:
     enabled: false
     api_key: ""
     management_url: ""
+  memcached:
+    enabled: false
+    url: ""
+    username: ""
+    password: ""
+    use_tls: false
+  opencti:
+    enabled: false
+  thehive
+    enabled: false
+    url: ""
+    api_key: ""
+  misp:
+    enabled: false
+  paloedl:
+    backend: sqlite
+    db_name: paloedl
