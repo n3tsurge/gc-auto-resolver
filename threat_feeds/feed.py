@@ -1,7 +1,6 @@
 import dns.resolver
 import requests
 import re
-import requests_cache
 import logging
 from requests import exceptions as rexp
 from netaddr import IPSet, IPNetwork, IPAddress
@@ -70,10 +69,10 @@ class Feed(object):
                     return False
                     #return "No Result"
             else:
-                cprint("[!] There was an issue attemping to connect to: {url}".format(url=self.url), RED)
+                logging.error("There was an issue attemping to connect to: {url}".format(url=self.url))
                 return False
         except rexp.ConnectionError as e:
-            cprint("[!] There was an issue attemping to connect to: {url}".format(url=self.url), RED)
+            logging.error("There was an issue attemping to connect to: {url}".format(url=self.url))
             return False
 
     def check_ip_dns(self, ip, options=None, *args, **kwargs):

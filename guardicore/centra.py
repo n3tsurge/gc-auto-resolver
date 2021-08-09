@@ -39,6 +39,9 @@ class CentraAPI(object):
             self.session.headers.update({
                 "Authorization": f"Bearer {data['access_token']}"
             })
+
+        if response.status_code == 401:
+            raise ValueErro("Incorrect Guardicore username or password.")
     
     def block_ip(self, ip, rule_set, direction):
         """
