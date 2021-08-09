@@ -13,9 +13,23 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 5. Define your threat feeds
 6. Run the tool
 
+## Getting started Docker
+
+1. Download the repository
+2. Modify your `config.yml` file 
+3. Build the image `docker build -t gc-auto-resolver ./`
+4. Run the image using `docker-compose up -d`
+
+```bash
+git clone git@github.com:n3tsurge/gc-auto-resolver.git
+cd gc-auto-resolver.git
+docker build -t gc-auto-resolver ./
+docker-compose up -d
+```
+
 ## Feature Checklist
 
-- [ ] Dockerized version
+- [x] Dockerized version
 - [x] Enrich and resolve incidents using external threat lists
 - [x] Add IPs to a `override block` rule in Guardicore
 - [ ] Check to see if an IP has any records in a DNSBL
