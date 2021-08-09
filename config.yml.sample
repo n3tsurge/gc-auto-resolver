@@ -16,18 +16,18 @@ rules:
       - Auto-Acknowledged # The tags to assign to the incident at resolution time
     minimum_hits: 2
     intel_source: 
-      - lists
-      #- virustotal
-      #- sentinelone
-      #- greynoise
-      #- elasticsearch
+      lists:
+      virustotal:
+      sentinelone:
+      greynoise:
+      elasticsearch:
     actions:
-      #- block
+      #block:
       #  rule_set: "Automatic Blacklisted IP Blocking"
       #  direction: BOTH
-      - resolve
-      - tag
-      #- paloedl
+      resolve:
+      tag:
+      paloedl:
       #  list_name: "custom"
       #  expiration: 72 # How many hours you want to keep the IP on the EDL
       #  comments: true # Add comments to the EDL to show why the IP was added
@@ -41,10 +41,10 @@ feeds:
   alienvault:
     name: Alienvault
     url: http://reputation.alienvault.com/reputation.data
-    format: "ip"
+    format: "p
     geodata: true
     disabled: false
-    type: "list"
+    type: list
   emergingthreats:
     name: Emerging Threats
     url: http://rules.emergingthreats.net/blockrules/compromised-ips.txt

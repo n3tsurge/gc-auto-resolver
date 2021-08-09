@@ -80,6 +80,9 @@ if __name__ == "__main__":
 
     config = load_config(path=args.config)
 
+#    print(config['rules']['Passive Detection']['actions'])
+ #   exit(1)
+
     # Hook requests with the cache
     if config['caching']['enabled']:
         logging.info("Enabling caching for Requests with a {} second(s) expiration period".format(config['caching']['expiration']))
@@ -145,9 +148,8 @@ if __name__ == "__main__":
                             centra.acknowledge_incident(ids=[incident_id])
 
                         # If a block action is defined, extract the block action config and do the blocking
-                        block_config = [k for k in rule_config['actions'] if isinstance(k, dict) and 'block' in k]
-                        if block_config:
-                            block_config = block_config[0]['block']
+                        if 'block' in rule_config['actions']:
+                            block_config = rule_config['actions']['block']
                             logging.info(f"Blocking {ip} in {block_config['rule_set']} for direction {block_config['direction']}")
                             centra.block_ip(ip=ip, **block_config)
 
