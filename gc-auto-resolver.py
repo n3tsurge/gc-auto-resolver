@@ -90,7 +90,12 @@ if __name__ == "__main__":
     # Create a new CentraAPI object and authenticate to the API
     logging.info("Authenticating to Guardicore")
     centra = CentraAPI(management_url=config['guardicore']['management_url'])
-    centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['password'])
+    
+    try:
+        centra.authenticate(username=config['guardicore']['username'], password=config['guardicore']['password'])
+    except Exception as e:
+        logging.error(e)
+        exit(1)
 
     # Set the lookback setting for Guardicore unless it's been overridden by a command line parameter
     look_back = config['guardicore']['lookback'] if not args.lookback != 24 else args.lookback
