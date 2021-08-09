@@ -63,7 +63,7 @@ class CentraAPI(object):
             self.session.post(f"https://{self.management_url}/api/v3.0/widgets/malicious-reputation-block", data=json.dumps(data))
 
 
-    def get_incidents(self, tags=[], tag__not=["Acknowledged"], limit=250, from_hours=24):
+    def get_incidents(self, tags=[], tag__not=["Acknowledged"], limit=500, from_hours=24):
         """
         Fetches a list of incidents from Centra UI based on
         a set of criteria
@@ -74,7 +74,7 @@ class CentraAPI(object):
         from_time = int((datetime.now() - timedelta(hours=from_hours)).timestamp()) * 1000
         to_time = int(datetime.now().timestamp()) * 1000
 
-        url = f"https://{self.management_url}/api/v3.0/incidents?tag={tag_list}&tag__not={tag__not}&from_time={from_time}&to_time={to_time}&limit=500"
+        url = f"https://{self.management_url}/api/v3.0/incidents?tag={tag_list}&tag__not={tag__not}&from_time={from_time}&to_time={to_time}&limit={limit}"
         response = self.session.get(url)
         if response.status_code == 200:
             data = response.json()

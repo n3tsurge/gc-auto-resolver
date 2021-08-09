@@ -27,6 +27,11 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 - [ ] SentinelOne Deep Visibility initiating process threat enrichment
 - [ ] Country blocking
 
+## Future State
+
+- Ability to write complex rules like `opencti_hit > 1 AND threat_list_matches > 3`
+- Ability to write per action rules e.g. only block if `X & Y & Z` but resolve of `A|B`
+
 ## Caching
 
 By default the tool will cache HTTP requests for HTTP based lists to limit the number of times a list needs to be fetched.  This is controlled in `config.yml` in this section:
