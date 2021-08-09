@@ -19,7 +19,7 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 9. Define your threat feeds
 10. Run the tool using `pipenv run python gc-auto-resolver.py`
 
-## Docker
+### Docker
 
 1. Download the repository
 2. Modify your `config.yml` file 
