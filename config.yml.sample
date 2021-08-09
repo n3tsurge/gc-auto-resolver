@@ -27,7 +27,7 @@ rules:
       #  direction: BOTH
       resolve:
       tag:
-      paloedl:
+      #paloedl:
       #  list_name: "custom"
       #  expiration: 72 # How many hours you want to keep the IP on the EDL
       #  comments: true # Add comments to the EDL to show why the IP was added
@@ -41,7 +41,7 @@ feeds:
   alienvault:
     name: Alienvault
     url: http://reputation.alienvault.com/reputation.data
-    format: "p
+    format: ip
     geodata: true
     disabled: false
     type: list
