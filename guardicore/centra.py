@@ -31,6 +31,11 @@ class CentraAPI(object):
         response = self.session.post(f"https://{self.management_url}/api/v3.0/authenticate", data=json.dumps(auth_body))
         if response.status_code == 200:
             data = response.json()
+
+            # If the account in use has MFA enabled, raise a ValueError
+            if '2fa_temp_token' in data:
+                raise ValueError("Guardicore credentials required MFA.  Use an acccount without MFA.")
+
             self.session.headers.update({
                 "Authorization": f"Bearer {data['access_token']}"
             })

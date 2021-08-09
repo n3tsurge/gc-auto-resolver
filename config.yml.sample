@@ -15,17 +15,17 @@ rules:
       - Auto-Acknowledged # The tags to assign to the incident at resolution time
     minimum_hits: 2
     intel_source: 
-      - lists|virustotal|sentinelone|greynoise
+      - lists|virustotal|sentinelone|greynoise|elasticsearch
     actions:
       #- block
       #  rule_set: "Automatic Blacklisted IP Blocking"
       #  direction: BOTH
       - resolve
       - tag
-      - paloedl
-        list_name: "custom"
-        expiration: 72 # How many hours you want to keep the IP on the EDL
-        comments: true # Add comments to the EDL to show why the IP was added
+      #- paloedl
+      #  list_name: "custom"
+      #  expiration: 72 # How many hours you want to keep the IP on the EDL
+      #  comments: true # Add comments to the EDL to show why the IP was added
 
 caching:
   enabled: true
@@ -90,7 +90,7 @@ engines:
     use_tls: false
   opencti:
     enabled: false
-  thehive
+  thehive:
     enabled: false
     url: ""
     api_key: ""

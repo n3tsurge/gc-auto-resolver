@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  gc-auto-resolver:
+    image: gc-auto-resolver
+    volumes:
+      - ./config.yml:/config.yml
