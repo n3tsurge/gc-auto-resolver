@@ -9,13 +9,18 @@ guardicore:
 
 rules:
   Passive Detection:
+    enabled: true
     tags:
       - Blacklisted IP Address # The tags that an incident should have when polling Centra incidents
     resolution_tags:
       - Auto-Acknowledged # The tags to assign to the incident at resolution time
     minimum_hits: 2
     intel_source: 
-      - lists|virustotal|sentinelone|greynoise|elasticsearch
+      - lists
+      #- virustotal
+      #- sentinelone
+      #- greynoise
+      #- elasticsearch
     actions:
       #- block
       #  rule_set: "Automatic Blacklisted IP Blocking"
