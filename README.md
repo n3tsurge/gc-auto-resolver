@@ -22,7 +22,7 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 
 ```bash
 git clone git@github.com:n3tsurge/gc-auto-resolver.git
-cd gc-auto-resolver.git
+cd gc-auto-resolver
 docker build -t gc-auto-resolver ./
 docker-compose up -d
 ```
