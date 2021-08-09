@@ -24,6 +24,7 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 - [ ] Add support for OpenCTI
 - [ ] Add support for MISP
 - [ ] Add support for Memcached
+- [ ] Add support for Elasticsearch indices
 - [ ] SentinelOne Deep Visibility initiating process threat enrichment
 - [ ] Country blocking
 
@@ -69,6 +70,7 @@ There are several types of resolution rules you can create
 - **opencti** - Looks to an OpenCTI for threat intelligence
 - **misp** - Looks to the MISP API for threat intelligence
 - **memcached** - Looks to a specified memcached namespace for threat intelligence
+- **elasticsearch** - Look to a threat list stored in an elasticsearch index
 
 ### Actions
 

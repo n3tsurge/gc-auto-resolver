@@ -39,6 +39,12 @@ def gn_lookup(ip):
     raise NotImplemented
 
 
+def elasticsearch_lookup(ip, index):
+    """
+    Checks to see if the IP address exists in an Elasticsearch index
+    """
+    raise NotImplemented
+
 def enrich_ip(ip, minimum_hits, feeds=[]):
 
     total_feeds = len(feeds)
