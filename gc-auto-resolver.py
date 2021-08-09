@@ -90,7 +90,8 @@ if __name__ == "__main__":
     look_back = config['guardicore']['lookback'] if not args.lookback != 24 else args.lookback
     
     while True:
-        for rule in config['rules']:
+        rules = [r for r in config['rules'] if config['rules'][r]['enabled'] == True]
+        for rule in rules:
             rule_config = config['rules'][rule]
             logging.info(f"Running rule \"{rule}\"")
 
