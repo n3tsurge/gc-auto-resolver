@@ -4,16 +4,22 @@ This tool automatically resolves Guardicore Incidents in the Centra UI based on 
 
 ![Example](example.png)
 
-## Getting started
+## Quickstart
 
-1. Rename `config.yml.sample` to `config.yml`
-2. Add your Guardicore management url
-3. Add your API accounts credentials
-4. Define your rules
-5. Define your threat feeds
-6. Run the tool
+### Manual Start
 
-## Getting started Docker
+1. Clone the repository `git clone git@github.com:n3tsurge/gc-auto-resolver.git`
+2. Change directories to `cd gc-auto-resolver`
+3. Make sure `pipenv` is installed using `pip install pipenv`
+4. Run `pipenv install`
+5. Rename `config.yml.sample` to `config.yml`
+6. Add your Guardicore management url in `config.yml`
+7. Add your API accounts credentials in `config.yml`
+8. Define your rules
+9. Define your threat feeds
+10. Run the tool using `pipenv run python gc-auto-resolver.py`
+
+## Docker
 
 1. Download the repository
 2. Modify your `config.yml` file 
